@@ -90,12 +90,16 @@ impl NewCommand {
             std::env::current_dir().expect("Failed to fetch cwd")
         };
 
+        // TODO: Clean
+        let local_path = format!("{}/{}", self.path.as_ref().unwrap().to_str().unwrap().to_string(), self.templ_subdir);
         let mut template_path = TemplatePath {
-            auto_path: Some(self.template.clone()),
+            // TODO: Minimal, breaks non-local, could be streamlined
+            // auto_path: Some(self.template.clone()),
+            auto_path: None,
             subfolder: Some(self.templ_subdir.clone()),
             git: None,
             branch: None,
-            path: None,
+            path: Some(local_path),
             favorite: None,
             tag: Some(self.tag.clone()),
             test: false,
@@ -131,6 +135,8 @@ impl NewCommand {
             template_variables.push("risc0_std=true".to_string());
             template_variables.push("risc0_feature_std=, features = ['std']".to_string());
         }
+
+        println!("template_path: {:?}", template_path);
 
         cargo_generate::generate(GenerateArgs {
             template_path,
