@@ -1,7 +1,7 @@
 // TODO: Update the name of the method loaded by the prover. E.g., if the method
 // is `multiply`, replace `METHOD_NAME_ELF` with `MULTIPLY_ELF` and replace
 // `METHOD_NAME_ID` with `MULTIPLY_ID`
-use methods::{METHOD_NAME_ELF, METHOD_NAME_ID};
+use guest::{METHOD_NAME_ELF, METHOD_NAME_ID};
 use risc0_zkvm::{
     default_prover,
     serde::{from_slice, to_vec},

@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-methods = { path = "../methods" }
+guest = { path = "../guest" }
 risc0-zkvm = { {{ risc0_zkvm }} }
 serde = "1.0"
