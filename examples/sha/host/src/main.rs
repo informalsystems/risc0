@@ -19,6 +19,7 @@ use risc0_zkvm::{
     sha::Digest,
     ExecutorEnv, Receipt,
 };
+use sha_core::Inputs;
 use sha_methods::{HASH_ELF, HASH_ID, HASH_RUST_CRYPTO_ELF};
 
 /// Hash the given bytes, returning the digest and a [Receipt] that can
@@ -31,7 +32,7 @@ use sha_methods::{HASH_ELF, HASH_ID, HASH_RUST_CRYPTO_ELF};
 /// Zero accelerator. See `src/methods/guest/Cargo.toml` for the patch
 /// definition, which can be used to enable SHA-256 accelerrator support
 /// everywhere the [sha2] crate is used.
-fn provably_hash(input: &str, use_rust_crypto: bool) -> (Digest, Receipt) {
+fn provably_hash(input: &Inputs, use_rust_crypto: bool) -> (Digest, Receipt) {
     let env = ExecutorEnv::builder()
         .add_input(&to_vec(input).unwrap())
         .build()
@@ -61,10 +62,11 @@ fn main() {
     let matches = Command::new("hash")
         .arg(Arg::new("message").default_value(""))
         .get_matches();
-    let message = matches.get_one::<String>("message").unwrap();
-
+    let inputs = Inputs {
+        message: matches.get_one::<String>("message").unwrap().to_string(),
+    };
     // Prove hash the message.
-    let (digest, receipt) = provably_hash(message, false);
+    let (digest, receipt) = provably_hash(&inputs, false);
 
     // Verify the receipt, ensuring the prover knows a valid SHA-256 preimage.
     receipt
@@ -76,11 +78,15 @@ fn main() {
 
 #[cfg(test)]
 mod tests {
+    use sha_core::Inputs;
     use sha_methods::{HASH_ID, HASH_RUST_CRYPTO_ID};
 
     #[test]
     fn hash_abc() {
-        let (digest, receipt) = super::provably_hash("abc", false);
+        let input = Inputs {
+            message: "abc".to_string(),
+        };
+        let (digest, receipt) = super::provably_hash(&input, false);
         receipt.verify(HASH_ID).unwrap();
         assert_eq!(
             hex::encode(digest.as_bytes()),
@@ -91,7 +97,10 @@ mod tests {
 
     #[test]
     fn hash_abc_rust_crypto() {
-        let (digest, receipt) = super::provably_hash("abc", true);
+        let input = Inputs {
+            message: "abc".to_string(),
+        };
+        let (digest, receipt) = super::provably_hash(&input, false);
         receipt.verify(HASH_RUST_CRYPTO_ID).unwrap();
         assert_eq!(
             hex::encode(digest.as_bytes()),

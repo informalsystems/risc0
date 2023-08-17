@@ -3679,13 +3679,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "sha"
+name = "sha-core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "sha-host"
 version = "0.12.0"
 dependencies = [
  "clap 4.3.19",
  "hex",
  "risc0-zkvm",
  "serde",
+ "sha-core",
  "sha-methods",
 ]
 

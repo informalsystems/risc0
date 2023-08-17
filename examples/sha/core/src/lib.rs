@@ -12,18 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#![no_main]
+use serde::{Deserialize, Serialize};
 
-// Also available as risc0_zkvm::sha::rust_crypto
-use risc0_zkvm::guest::env;
-use sha2::{Digest as _, Sha256};
-use sha_core::Inputs;
-
-risc0_zkvm::guest::entry!(main);
-
-// Example of using RustCrypto with RISC Zero accelerator support.
-pub fn main() {
-    let inputs: Inputs = env::read();
-    let digest = Sha256::digest(&inputs.message.as_bytes());
-    env::commit(&digest.as_slice());
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Inputs {
+    pub message: String,
 }

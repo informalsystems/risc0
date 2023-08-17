@@ -18,12 +18,13 @@ use risc0_zkvm::{
     guest::env,
     sha::{Impl, Sha256},
 };
+use sha_core::Inputs;
 
 risc0_zkvm::guest::entry!(main);
 
 // Example of using the risc0_zkvm::sha module to hash data.
 pub fn main() {
-    let data: String = env::read();
-    let digest = Impl::hash_bytes(&data.as_bytes());
+    let inputs: Inputs = env::read();
+    let digest = Impl::hash_bytes(&inputs.message.as_bytes());
     env::commit(&digest.as_bytes());
 }
