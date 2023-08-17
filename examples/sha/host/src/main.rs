@@ -87,12 +87,16 @@ mod tests {
             message: "abc".to_string(),
         };
         let (digest, receipt) = super::provably_hash(&input, false);
-        receipt.verify(HASH_ID).unwrap();
-        assert_eq!(
-            hex::encode(digest.as_bytes()),
-            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-            "We expect to match the reference SHA-256 hash of the standard test value 'abc'"
-        );
+        match receipt.verify(HASH_ID) {
+            Err(err) => panic!("{err}"),
+            Ok(_) => {
+                assert_eq!(
+                    hex::encode(digest.as_bytes()),
+                    "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+                    "We expect to match the reference SHA-256 hash of the standard test value 'abc'"
+                );
+            }
+        }
     }
 
     #[test]
@@ -101,11 +105,15 @@ mod tests {
             message: "abc".to_string(),
         };
         let (digest, receipt) = super::provably_hash(&input, true);
-        receipt.verify(HASH_RUST_CRYPTO_ID).unwrap();
-        assert_eq!(
-            hex::encode(digest.as_bytes()),
-            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
-            "We expect to match the reference SHA-256 hash of the standard test value 'abc'"
-        );
+        match receipt.verify(HASH_RUST_CRYPTO_ID) {
+            Err(err) => panic!("{err}"),
+            Ok(_) => {
+                assert_eq!(
+                    hex::encode(digest.as_bytes()),
+                    "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+                    "We expect to match the reference SHA-256 hash of the standard test value 'abc'"
+                );
+            }
+        }
     }
 }
