@@ -100,7 +100,7 @@ mod tests {
         let input = Inputs {
             message: "abc".to_string(),
         };
-        let (digest, receipt) = super::provably_hash(&input, false);
+        let (digest, receipt) = super::provably_hash(&input, true);
         receipt.verify(HASH_RUST_CRYPTO_ID).unwrap();
         assert_eq!(
             hex::encode(digest.as_bytes()),
