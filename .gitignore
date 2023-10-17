@@ -8,7 +8,6 @@
 .DS_Store
 .idea/
 bazel-*
-Cargo.lock
 dist/
 Dockerfile
 rust-project.json
